@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import Boot from "./scenes/Boot";
 import World from "./scenes/World";
+import Battle from "./scenes/Battle";
+import UI from "./scenes/UI";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +20,9 @@ const config = {
     },
     scene: [
         Boot,
-        World
+        World,
+        Battle,
+        UI
     ],
     scale: {
         mode: Phaser.Scale.FIT,//ajustamos a todo el tam de pantalla

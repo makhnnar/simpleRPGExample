@@ -82,7 +82,13 @@ export default class World extends Phaser.Scene {
             // parameters are x, y, width, height
             this.spawns.create(x, y, 20, 20);            
         }        
-        this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
+        this.physics.add.overlap(
+            this.player,
+            this.spawns,
+            this.onMeetEnemy,
+            false, 
+            this
+        );
     }
 
     update() {
