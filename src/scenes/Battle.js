@@ -55,7 +55,7 @@ export default class Battle extends Phaser.Scene {
         }
         if(this.units[this.index]) {
             // if its player hero
-            if(this.units[this.index] instanceof PlayerCharacter) {                
+            if(this.units[this.index] instanceof Player) {                
                 this.events.emit('PlayerSelect', this.index);
             } else { // else if its enemy unit
                 // pick random hero
