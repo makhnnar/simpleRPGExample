@@ -131,6 +131,9 @@ export default class World extends Phaser.Scene {
 
         this.cameras.main.flash(300);
         //this.cameras.main.fade(300);
+
+        // switch to BattleScene
+        this.scene.switch('Battle');
     }
 
 }
