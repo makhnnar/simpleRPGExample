@@ -65,16 +65,20 @@ export default class Battle extends Phaser.Scene {
             if(this.index >= this.units.length) {
                 this.index = 0;
             }
-        } while(this.units[this.index].living);
+        } while(!this.units[this.index].living);
         
         // if its player hero
-        if(this.units[this.index] instanceof PlayerCharacter) {                
+        if(this.units[this.index] instanceof Player) {                
             this.events.emit("PlayerSelect", this.index);
         } else { // else if its enemy unit
             // pick random hero
             var r = Math.floor(Math.random() * this.heroes.length);
             // call the enemy"s attack function 
-            this.units[this.index].attack(this.heroes[r]);  
+            try{
+                this.units[this.index].attack(this.heroes[r]);
+            }catch(error){
+
+            }  
             // add timer for the next turn, so will have smooth gameplay
             this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
         }

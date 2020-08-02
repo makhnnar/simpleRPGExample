@@ -25,7 +25,7 @@ export default class UI extends Phaser.Scene {
         this.graphics.fillRect(95, 150, 90, 100);
         this.graphics.strokeRect(188, 150, 130, 100);
         this.graphics.fillRect(188, 150, 130, 100);
-
+        
         // basic container to hold all menus
         this.menus = this.add.container();
                 
@@ -40,28 +40,45 @@ export default class UI extends Phaser.Scene {
         this.menus.add(this.heroesMenu);
         this.menus.add(this.actionsMenu);
         this.menus.add(this.enemiesMenu);
-
-        this.battleScene = this.scene.get('Battle');
-        this.remapHeroes();
-        this.remapEnemies();
-
-        this.input.keyboard.on('keydown', this.onKeyInput, this);
-
-        this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
-
-        this.events.on("SelectEnemies", this.onSelectEnemies, this);
+                
+        this.battleScene = this.scene.get("Battle");                                
         
+        // listen for keyboard events
+        this.input.keyboard.on("keydown", this.onKeyInput, this);   
+        
+        // when its player cunit turn to move
+        this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
+        
+        // when the action on the menu is selected
+        // for now we have only one action so we dont send and action id
+        this.events.on("SelectedEnemies", this.onSelectEnemies, this);
+        
+        // an enemy is selected
         this.events.on("Enemy", this.onEnemy, this);
-
-        this.battleScene.nextTurn();
-
+        
+        // when the scene receives wake event
+        this.sys.events.on('wake', this.createMenu, this);
+        
+        // the message describing the current action
         this.message = new Message(this, this.battleScene.events);
-        this.add.existing(this.message);
+        this.add.existing(this.message);        
+        
+        this.createMenu(); 
         
     }
 
+    createMenu() {
+        // map hero menu items to heroes
+        this.remapHeroes();
+        // map enemies menu items to enemies
+        this.remapEnemies();
+        // first move
+        this.battleScene.nextTurn(); 
+    }
+
     onKeyInput(event) {
-        if(this.currentMenu) {
+        if(this.currentMenu && this.currentMenu.selected) {
+            console.log("onKeyInput(inner): "+JSON.stringify(event));
             if(event.code === "ArrowUp") {
                 this.currentMenu.moveSelectionUp();
             } else if(event.code === "ArrowDown") {
@@ -72,6 +89,7 @@ export default class UI extends Phaser.Scene {
                 this.currentMenu.confirm();
             } 
         }
+        console.log("onKeyInput(outter): "+JSON.stringify(event));
     }
 
     update() {

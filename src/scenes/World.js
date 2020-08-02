@@ -89,6 +89,7 @@ export default class World extends Phaser.Scene {
             false, 
             this
         );
+        this.sys.events.on('wake', this.wake, this);
     }
 
     update() {
@@ -134,6 +135,13 @@ export default class World extends Phaser.Scene {
 
         // switch to BattleScene
         this.scene.switch('Battle');
+    }
+
+    wake(){
+        this.cursors.left.reset();
+        this.cursors.right.reset();
+        this.cursors.up.reset();
+        this.cursors.down.reset();
     }
 
 }

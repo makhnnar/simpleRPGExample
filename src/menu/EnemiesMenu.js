@@ -7,6 +7,7 @@ export default class EnemiesMenu extends Menu {
     }
 
     confirm(){
+        console.log("EnemiesMenu: Is this confirm????");
         this.scene.events.emit("Enemy", this.menuItemIndex);
     }
     
