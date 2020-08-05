@@ -10,6 +10,7 @@ export default class Menu extends Phaser.GameObjects.Container {
         this.heroes = heroes;
         this.x = x;
         this.y = y;
+        this.selected = false;
     }
 
     addMenuItem(unit) {
@@ -32,7 +33,7 @@ export default class Menu extends Phaser.GameObjects.Container {
                 this.menuItemIndex = this.menuItems.length - 1;
         } while(!this.menuItems[this.menuItemIndex].active);
         this.menuItems[this.menuItemIndex].select();
-        console.log("onKeyInput(outter): "+JSON.stringify(event));
+        console.log("moveSelectionUp(outter): "+JSON.stringify(this.menuItems[this.menuItemIndex]));
     }
 
     moveSelectionDown() {
@@ -46,7 +47,8 @@ export default class Menu extends Phaser.GameObjects.Container {
         console.log("moveSelectionDown(outter): "+JSON.stringify(this.menuItems[this.menuItemIndex]));
     }
 
-    // select the menu as a whole and an element with index from it
+    // select the menu as a whole and an element 
+    //with index from it
     select(index) {
         if(!index)
             index = 0;       

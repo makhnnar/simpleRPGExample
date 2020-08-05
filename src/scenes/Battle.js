@@ -18,12 +18,21 @@ export default class Battle extends Phaser.Scene {
 
         this.startBattle();
 
-        this.sys.events.on('wake', this.wake, this);
+        this.sys.events.on('wake', this.startBattle, this);
     }
 
     startBattle() {
         // player character - warrior
-        var warrior = new Player(this, 250, 50, "player", 1, "Warrior", 100, 20);        
+        var warrior = new Player(
+            this, 
+            250, 
+            50, 
+            "player", 
+            1, 
+            "Warrior", 
+            100, 
+            20
+        );        
         this.add.existing(warrior);
         
         // player character - mage
@@ -43,7 +52,7 @@ export default class Battle extends Phaser.Scene {
         // array with both parties, who will attack
         this.units = this.heroes.concat(this.enemies);
         
-        this.scene.launch("UI"); 
+        this.scene.run("UI"); 
 
         this.index = -1; // currently active unit
 
@@ -72,7 +81,10 @@ export default class Battle extends Phaser.Scene {
             this.events.emit("PlayerSelect", this.index);
         } else { // else if its enemy unit
             // pick random hero
-            var r = Math.floor(Math.random() * this.heroes.length);
+            var r;
+            do {
+                r = Math.floor(Math.random() * this.heroes.length);
+            } while(!this.heroes[r].living) 
             // call the enemy"s attack function 
             try{
                 this.units[this.index].attack(this.heroes[r]);
@@ -100,6 +112,13 @@ export default class Battle extends Phaser.Scene {
         return victory || gameOver;
     }
 
+    receivePlayerSelection(action, target) {
+        if(action == 'attack') {            
+            this.units[this.index].attack(this.enemies[target]);              
+        }
+        this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
+    }
+
     endBattle() {       
         // clear state, remove sprites
         this.heroes.length = 0;
@@ -112,27 +131,6 @@ export default class Battle extends Phaser.Scene {
         // sleep the UI
         this.scene.sleep('UI');
         // return to WorldScene and sleep current BattleScene
-        this.scene.switch('World');
-    }
-
-    receivePlayerSelection(action, target) {
-        if(action == 'attack') {            
-            this.units[this.index].attack(this.enemies[target]);              
-        }
-        this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
-    }
-
-    wake(){
-        this.scene.run('UI');  
-        this.time.addEvent({
-            delay: 2000,
-            callback: this.exitBattle,
-            callbackScope: this
-        });        
-    }
-
-    exitBattle(){
-        this.scene.sleep('UI');
         this.scene.switch('World');
     }
 
